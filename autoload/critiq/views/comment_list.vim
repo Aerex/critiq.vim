@@ -103,7 +103,7 @@ fu! critiq#views#comment_list#render() abort
   setl nomodifiable
 
   for comment_line_nbr in keys(t:critiq_comment_line_number_map)
-    exe 'sign place ' . comment_line_nbr ' line=' . comment_line_nbr . ' name=critiqcomment buffer=' . bufnr('%')
+    exe 'sign place ' . comment_line_nbr ' line=' . comment_line_nbr . ' name=critiqremotecomment buffer=' . bufnr('%')
   endfor
 
   command! -buffer CritiqCommentNext call critiq#views#comment_list#next()
