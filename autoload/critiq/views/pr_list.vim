@@ -54,12 +54,12 @@ fu! s:on_pull_requests(prs, total)
 	command! -buffer CritiqLoadMorePrs call s:load_more_prs()
 
 	if !exists('g:critiq_no_mappings')
-		nnoremap <buffer> l :CritiqLoadMorePrs<cr>
-		nnoremap <buffer> q :tabc<cr>
-		nnoremap <buffer> o :CritiqOpenPr<cr>
-		nnoremap <buffer> <cr> :CritiqOpenPr<cr>
-		nnoremap <buffer> gp :CritiqBrowsePr<cr>
-		nnoremap <buffer> gi :CritiqBrowseIssue<cr>
+		nnoremap <buffer> <silent> l :CritiqLoadMorePrs<cr>
+		nnoremap <buffer> <silent> q :tabc<cr>
+		nnoremap <buffer> <silent> o :CritiqOpenPr<cr>
+		nnoremap <buffer> <silent> <cr> :CritiqOpenPr<cr>
+		nnoremap <buffer> <silent> gp :CritiqBrowsePr<cr>
+		nnoremap <buffer> <silent> gi :CritiqBrowseIssue<cr>
 	endif
 	
 	call critiq#trigger_event('CritiqPrList')

@@ -2,10 +2,11 @@
 " Code for rendering the buffer which contains the diff of the pr, etc.
 
 fu! s:on_open_pr(response)
-	let t:critiq_pull_request = a:response['body']
+  let t:critiq_pull_request = a:response['body']
 
 	command! -buffer CritiqApprove call critiq#views#review#render('APPROVE')
 	command! -buffer CritiqRequestChanges call critiq#views#review#render('REQUEST_CHANGES')
+    command! -buffer CritiqRequestPendingChanges call critiq#review#request_pending_review(t:critiq_pull_request)
 	command! -buffer CritiqComment call critiq#views#review#render('COMMENT')
 	command! -buffer CritiqCommentLine call critiq#views#comment#render()
 	command! -buffer CritiqOpenFile call critiq#views#pr_file#render()
@@ -15,12 +16,13 @@ fu! s:on_open_pr(response)
 	call critiq#pr_tab_commands()
 
 	if !exists('g:critiq_no_mappings')
-		nnoremap <buffer> q :tabc<cr>
-		nnoremap <buffer> ra :CritiqApprove<cr>
-		nnoremap <buffer> rr :CritiqRequestChanges<cr>
-		nnoremap <buffer> rc :CritiqComment<cr>
-		nnoremap <buffer> c :CritiqCommentLine<cr>
-		nnoremap <buffer> C :CritiqListComments<cr>
+		nnoremap <buffer> <silent> q :tabc<cr>
+		nnoremap <buffer> <silent> ra :CritiqApprove<cr>
+		nnoremap <buffer> <silent> rr :CritiqRequestChanges<cr>
+		nnoremap <buffer> <silent> rp :CritiqRequestPendingChanges<cr>
+		nnoremap <buffer> <silent> rc :CritiqComment<cr>
+		nnoremap <buffer> <silent> c :CritiqCommentLine<cr>
+		nnoremap <buffer> <silent> C :CritiqListComments<cr>
 		nnoremap <buffer> gf :CritiqOpenFile<cr>
 		nnoremap <buffer> <leader>C :CritiqListCommits<cr>
 		call critiq#pr_tab_mappings()
@@ -52,30 +54,43 @@ fu! s:echo_cursor_comment()
 	endif
 endfu
 
+fu! s:set_comment_line_sign(comment, comment_sign_name, is_local_comment)
+  let line_number = 1
+  for line_diff in t:critiq_pr_diff
+    if empty(line_diff) || (exists('t:critiq_pr_comments_map') && a:is_local_comment && has_key(t:critiq_pr_comments_map, line_number))
+      let line_number += 1
+      continue
+    endif
+
+    if a:comment.path == line_diff.file && line_diff.file_index == a:comment.position
+      let t:critiq_pr_comments_map[line_number] = a:comment
+      exe 'sign place ' . line_number ' line=' . line_number . ' name=' . a:comment_sign_name .' buffer=' . bufnr('%')
+    endif
+    let line_number += 1
+  endfor
+endfu
+
 fu! s:render_pr_comments()
 	if !exists('t:critiq_pr_comments_loaded') && exists('t:critiq_pull_request') && exists('t:critiq_pr_comments')
 		let t:critiq_pr_comments_loaded = 1
 		let t:critiq_pr_comments_map = {}
-		exe 'sign define critiqcomment text=' . g:critiq_comment_symbol . ' texthl=Search'
+		exe 'sign define critiqremotecomment text=' . g:critiq_comment_symbol . ' texthl=Search'
+		exe 'sign define critiqlocalcomment text=' . g:critiq_comment_symbol . ' texthl=' . g:critiq_local_comment_highlight
 
 		let pr = t:critiq_pull_request
 		for comment in t:critiq_pr_comments
 			if pr.head.sha == comment.commit_id
-				let line_number = 1
-				for line_diff in t:critiq_pr_diff
-					if empty(line_diff)
-						let line_number += 1
-						continue
-					endif
-
-					if comment.path == line_diff.file && line_diff.file_index == comment.position
-						let t:critiq_pr_comments_map[line_number] = comment
-						exe 'sign place ' . line_number ' line=' . line_number . ' name=critiqcomment buffer=' . bufnr('%')
-					endif
-					let line_number += 1
-				endfor
+              call s:set_comment_line_sign(comment, 'critiqremotecomment', 0)
 			endif
 		endfor
+
+        let local_pending_review = critiq#review#local_pending_review_exists(pr) 
+        if local_pending_review
+          let local_pending_review = critiq#review#get_local_pending_review(pr) 
+          for comment in local_pending_review.comments
+            call s:set_comment_line_sign(comment, 'critiqlocalcomment', 1)
+          endfor
+        endif
 		" This is for truncating the message body...
 		setl shortmess+=T
 		autocmd CursorMoved <buffer> call s:echo_cursor_comment()

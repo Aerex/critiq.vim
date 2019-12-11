@@ -2,9 +2,14 @@
 fu! s:submit_comment()
 	" For some reason double quotes are causing this to display line breaks
 	" properly...
-	let body = join(getline(1, '$'), "\n")
 	let pr = t:critiq_pull_request
-	call critiq#pr#submit_comment(pr, b:critiq_line_diff, body)
+	let body = join(getline(1, '$'), "\n")
+    let local_pending_view_exists = critiq#review#local_pending_review_exists(pr)
+    if local_pending_view_exists 
+      call critiq#review#add_comment_to_local_pending_review(pr, b:critiq_line_diff, body)
+    else
+	  call critiq#pr#submit_comment(pr, b:critiq_line_diff, body)
+    endif
 	bd
 endfu
 

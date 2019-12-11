@@ -44,6 +44,12 @@ reviewing session.
     :Critiq -label=status/0-triage moby/moby
 <
                                                                 *:CritiqOpenPr*
+:CritiqCommentNext
+
+  Views: Comment 
+  
+  Cycle to the next comment  in the chain. If at the end
+
 :CritiqOpenPr
   
   Views: Pull request list.
@@ -73,6 +79,11 @@ reviewing session.
 
   Request changes on the pull request.
 
+:CritiqRequestPendingChanges
+
+  Views: Pull request
+
+  Request pending changes on the pull request
                                                                *:CritiqComment*
 :CritiqComment
 
@@ -254,6 +265,16 @@ g:critiq_no_mappings
 
   This disables all the default key mappings. By default all mappings are
   enabled.
+
+                                                  *critiq-g:critiq_comment_navigate_no_wrap*
+g:critiq_comment_navigate_no_wrap
+  This disables infinite looping while navigating between comments in the Pull
+  Request View
+
+                                                  *critiq-g:critiq_local_comment_highlight*
+g:critiq_local_comment_highlight
+  This sets the texthl for all local comments in the Pull Request View.
+  Defaults to 'SpecialKey'
 
                                                   *critiq-g:critiq_oauth*
 g:critiq_github_oauth

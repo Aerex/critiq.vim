@@ -3,6 +3,10 @@ if !exists('g:critiq_comment_symbol')
 	let g:critiq_comment_symbol = '↪'
 endif
 
+if !exists('g:critiq_local_comment_highlight')
+	let g:critiq_local_comment_highlight = 'SpecialKey'
+endif
+
 fu! critiq#trigger_event(event)
 	if exists('#User#' . a:event)
 		exe 'doautocmd User ' a:event

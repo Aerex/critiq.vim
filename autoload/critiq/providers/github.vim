@@ -15,7 +15,7 @@ if !exists('g:critiq_github_oauth')
 	let g:critiq_github_oauth = 0
 endif
 
-" {{{ misc
+" {{ misc
 
 fu! s:base_options(callback_name)
 	let opts = {'callback': function(a:callback_name)}
@@ -221,6 +221,25 @@ endfu
 let s:handlers['submit_comment'] = function('s:submit_comment')
 " }}}
 
+" {{{ edit_comment
+fu! s:edit_comment(pr, comment_id, body)
+	let data = {
+		\ 'body': a:body,
+		\ }
+
+	let opts = s:base_options('s:check_gh_error')
+	let opts.method = 'PATCH'
+	let opts.data = data
+
+	let url = s:pr_repo_url(a:pr) . '/pulls/comments' . a:comment_id
+
+	let id = critiq#request#send(url, opts)
+endfu
+
+let s:handlers['edit_comment'] = function('s:edit_comment')
+" }}}
+
+
 " {{{ merge_pr
 fu! s:merge_pr(pr)
 	let opts = s:base_options('s:check_gh_error')
@@ -393,6 +412,7 @@ endfu
 
 let s:handlers['delete_branch'] = function('s:delete_branch')
 " }}}
+
 " {{{ request
 
 fu! s:write_token(token)
@@ -450,6 +470,7 @@ fu! s:on_token(response) abort
 		endfor
 	endif
 endfu
+
 
 fu! critiq#providers#github#request(function_name, args)
 	if ! exists('s:token')
