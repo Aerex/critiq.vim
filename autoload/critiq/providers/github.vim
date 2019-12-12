@@ -190,6 +190,11 @@ fu! s:submit_review(pr, event, body)
 		\	'comments': [],
 		\ }
 
+    let local_pending_review_exists = critiq#review#local_pending_review_exists(a:pr)
+    if local_pending_review_exists
+      let local_pending_review = critiq#review#get_local_pending_review(a:pr)
+      call extend(data.comments, local_pending_review.comments)
+    endif
 	let opts = s:base_options('s:check_gh_error')
 	let opts['method'] = 'POST'
 	let opts['data'] = data

@@ -1,8 +1,13 @@
-
-
 fu! s:submit_review(event)
 	let body = join(getline(1, '$'), "\n")
 	call critiq#pr#submit_review(t:critiq_pull_request, a:event, body)
+    call critiq#review#delete_pending_request_review(t:critiq_pull_request)
+    let pr_issue = {
+          \'repository_url': critiq#pr#repo_url(t:critiq_pull_request),
+          \'number': t:critiq_pull_request['number'] 
+          \}
+    " TODO: Figure out how to refresh comments
+	"call critiq#pr#pr_comments(pr_issue, function('s:on_pr_comments'))
 	bd
 endfu
 
@@ -20,8 +25,8 @@ fu! critiq#views#review#render(state)
 	call critiq#pr_tab_commands()
 
 	if !exists('g:critiq_no_mappings')
-		nnoremap <buffer> q :bd<cr>
-		nnoremap <buffer> <cr> :CritiqSubmitReview<cr>
+		nnoremap <buffer> <silent> q :bd<cr>
+		nnoremap <buffer> <silent> <cr> :CritiqSubmitReview<cr>
 		call critiq#pr_tab_mappings()
 	endif
 
