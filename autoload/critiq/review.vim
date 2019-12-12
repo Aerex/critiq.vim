@@ -54,7 +54,14 @@ fu! critiq#review#add_comment_to_local_pending_review(pr, line_diff, body)
         \ }
   let local_pending_review_file = json_decode(readfile(s:local_pending_review_dir(a:pr) . '/data')[0])
   call add(local_pending_review_file.comments, data)
-  echo local_pending_review_file
   call writefile([json_encode(local_pending_review_file)], s:local_pending_review_dir(a:pr) . '/data')
+endfu
+
+fu! critiq#review#delete_pending_request_review(pr)
+  let local_pending_review_file_path = s:local_pending_review_dir(a:pr) . '/data'
+  try
+    delete(local_pending_review_file_path)
+  catch
+  endtry
 endfu
 
