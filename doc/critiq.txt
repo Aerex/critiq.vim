@@ -63,7 +63,7 @@ reviewing session.
 
   Open the pull request from the github site. If in pull request listing the
   pull request this command will open is determined by the location of the
-  cursor.
+  cursor. Defaults to gp
 
                                                                *:CritiqApprove*
 :CritiqApprove
