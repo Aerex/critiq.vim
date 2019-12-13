@@ -244,13 +244,13 @@ CritiqEditLabel
 
                                                               *critiq-$GH_USER*
 $GH_USER
-  
+
   User name for authenticating with github. If the environment variable is not
   set this plugin will refuse to function.
 
                                                               *critiq-$GH_PASS*
 $GH_PASS
-  
+
   Required environment variable for authenticating with Github. This
   environment variable can be an API token instead of your actual password.
 
@@ -286,5 +286,20 @@ g:critiq_github_oauth
 
 
 ===============================================================================
+6. Mappings                                     *critiq-mapppings*
+
+*gp*
+  Go to pull request in browser. Used in Pull Request List View
+
+*gf*
+  Open file in a new vertical split buffer 
+
+
+
+
+
+
+===============================================================================
+ 
 
   vim:tw=78:ts=2:sts=2:sw=2:ft=help:norl:expandtab:

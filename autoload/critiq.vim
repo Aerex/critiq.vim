@@ -25,10 +25,10 @@ endfu
 fu! critiq#pr_tab_mappings()
 	nnoremap <buffer> gp :CritiqBrowsePr<cr>
 	nnoremap <buffer> gi :CritiqBrowseIssue<cr>
-	nnoremap <buffer> m :CritiqMerge<cr>
-	nnoremap <buffer> <leader>c :CritiqCheckout<cr>
-	nnoremap <buffer> <leader>p :CritiqPull<cr>
-	nnoremap <buffer> <leader>d :CritiqDeleteBranch<cr>
+	nnoremap <buffer>  <silent> <localleader>gm   :CritiqMerge<cr>
+	nnoremap <buffer> <silent> <localleader>c     :CritiqCheckout<cr>
+	nnoremap <buffer> <silent> <localleader>p     :CritiqPull<cr>
+	nnoremap <buffer> <silent> <localleader>d     :CritiqDeleteBranch<cr>
 endfu
 
 fu! critiq#pull()
