@@ -1,4 +1,12 @@
 
+if !exists('g:critiq_pr_merge_warning')
+  let g:critiq_pr_merge_warning = 1
+endif 
+
+if !exists('g:critiq_pr_delete_remote_branch_warning)
+  let g:critiq_pr_delete_remote_branch_warning = 1
+endif 
+
 if !exists('g:critiq_comment_symbol')
 	let g:critiq_comment_symbol = '↪'
 endif

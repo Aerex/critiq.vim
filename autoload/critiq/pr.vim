@@ -33,6 +33,12 @@ fu! critiq#pr#submit_comment(pr, line, body)
 endfu
 
 fu! critiq#pr#merge_pr(pr)
+  if g:critiq_pr_merge_warning
+      let choice = confirm('Are you sure you want to merge the remote branch?', "&Yes\n&No", 2)
+      if choice == 2
+        return
+      endif
+  endif
 	return s:call_provider('merge_pr', [a:pr])
 endfu
 
@@ -65,7 +71,13 @@ fu! critiq#pr#pr_reviews(issue, callback)
 endfu
 
 fu! critiq#pr#delete_branch(pr)
-	return s:call_provider('delete_branch', [a:pr])
+    if g:critiq_pr_delete_remote_branch_warning
+      let choice = confirm('Are you sure you want to delete the remote branch?', "&Yes\n&No", 2)
+      if choice == 2
+        return 
+      endif
+    endif
+    return s:call_provider('delete_branch', [a:pr])
 endfu
 
 fu! critiq#pr#repo_url(issue)

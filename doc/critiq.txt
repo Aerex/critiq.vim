@@ -1,5 +1,12 @@
 *critiq.txt*  Github code reviews from Neovim.
 
+
+1. Introduction             |critiq-introduction|
+2. Getting Started          |critiq-getting-started|
+3. Commands                 |critiq-commands|
+4. Autocommands             |critiq-autocmd|
+5. Configuration Variables  |critiq-variables| 
+6. Mappings                 |critiq-mappings|
 ===============================================================================
 1. Introduction                                           *critiq-introduction*
 
@@ -275,6 +282,16 @@ g:critiq_comment_navigate_no_wrap
 g:critiq_local_comment_highlight
   This sets the texthl for all local comments in the Pull Request View.
   Defaults to 'SpecialKey'
+                                                  *critiq-g:critiq_pr_merge_warning*
+
+g:critiq_pr_merge_warning
+  Request a confirmation from user before merging pull request
+  Defaults to True. To disable set to 0
+                                                  *critiq-g:critiq_pr_delete_branch_warning*
+
+g:critiq_pr_delete_remote_branch_warning
+  Request a confirmation from user before deleting remote branch
+  Defaults to True. To disable set to 0
 
                                                   *critiq-g:critiq_oauth*
 g:critiq_github_oauth
@@ -288,16 +305,17 @@ g:critiq_github_oauth
 ===============================================================================
 6. Mappings                                     *critiq-mapppings*
 
-*gp*
-  Go to pull request in browser. Used in Pull Request List View
+6.1 Pull Review List
 
-*gf*
-  Open file in a new vertical split buffer 
+Mode    Map  Description~
 
+Normal  gp   Go to pull request in browser   
 
+6.2 Pull Request
 
+Mode    Map Description~
 
-
+Normal  gf  Open file in a new veritical split buffer
 
 ===============================================================================
  
