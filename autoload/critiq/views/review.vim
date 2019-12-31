@@ -1,14 +1,14 @@
+fu! s:on_pr_comments(response)
+  let t:critiq_pr_comments = a:response.body
+endfu
+
 fu! s:submit_review(event)
 	let body = join(getline(1, '$'), "\n")
 	call critiq#pr#submit_review(t:critiq_pull_request, a:event, body)
     call critiq#review#delete_pending_request_review(t:critiq_pull_request)
-    let pr_issue = {
-          \'repository_url': critiq#pr#repo_url(t:critiq_pull_request),
-          \'number': t:critiq_pull_request['number'] 
-          \}
-    " TODO: Figure out how to refresh comments
-	"call critiq#pr#pr_comments(pr_issue, function('s:on_pr_comments'))
 	bd
+    " Refresh comments on pull request view
+	call critiq#views#pr#refresh(t:critiq_pull_request)
 endfu
 
 fu! critiq#views#review#render(state)
