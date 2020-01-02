@@ -16,15 +16,15 @@ fu! s:on_open_pr(response)
 	call critiq#pr_tab_commands()
 
 	if !exists('g:critiq_no_mappings')
-		nnoremap <buffer> <silent> q :tabc<cr>
-		nnoremap <buffer> <silent> ra :CritiqApprove<cr>
-		nnoremap <buffer> <silent> rr :CritiqRequestChanges<cr>
-		nnoremap <buffer> <silent> rp :CritiqRequestPendingChanges<cr>
-		nnoremap <buffer> <silent> rc :CritiqComment<cr>
-		nnoremap <buffer> <silent> c :CritiqCommentLine<cr>
-		nnoremap <buffer> <silent> C :CritiqListComments<cr>
-		nnoremap <buffer> gf :CritiqOpenFile<cr>
-		nnoremap <buffer> <leader>C :CritiqListCommits<cr>
+		nnoremap <buffer> <silent> q          :tabc<cr>
+		nnoremap <buffer> <silent> ra         :CritiqApprove<cr>
+		nnoremap <buffer> <silent> rr         :CritiqRequestChanges<cr>
+		nnoremap <buffer> <silent> rp         :CritiqRequestPendingChanges<cr>
+		nnoremap <buffer> <silent> rc         :CritiqComment<cr>
+		nnoremap <buffer> <silent> c          :CritiqCommentLine<cr>
+		nnoremap <buffer> <silent> C          :CritiqListComments<cr>
+		nnoremap <buffer> <silent> gf         :CritiqOpenFile<cr>
+		nnoremap <buffer> <silent> <leader>C  :CritiqListCommits<cr>
 		call critiq#pr_tab_mappings()
 	endif
 
@@ -36,6 +36,10 @@ endfu
 fu! s:on_pr_comments(response)
 	let t:critiq_pr_comments = a:response.body
 	call s:render_pr_comments()
+endfu
+fu! s:on_pr_comments_refresh(response)
+	let t:critiq_pr_diff = critiq#diff#parse(a:response.body)
+    call s:on_pr_comments(a:response)
 endfu
 
 fu! s:echo_cursor_comment()
@@ -138,4 +142,8 @@ endfu
 fu! critiq#views#pr#render()
 	let pr = t:critiq_pull_requests[line('.') - 1]
 	call critiq#pr#diff(pr, function('s:on_open_pr_diff'))
+endfu
+
+fu! critiq#views#pr#refresh(pr)
+	call critiq#pr#pr_comments(a:pr, function('s:on_pr_comments_refresh'))
 endfu

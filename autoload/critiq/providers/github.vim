@@ -277,7 +277,7 @@ endfu
 fu! s:pr_comments(issue, callback)
 	let opts = s:base_options('s:on_pr_comments')
 
-	let url = s:issue_repo_url(a:issue) . '/pulls/' . a:issue['number'] . '/comments'
+	let url = s:repo_url(a:issue) . '/pulls/' . a:issue['number'] . '/comments'
 	let id = critiq#request#send(url, opts)
 	let s:requests[id] = { 'callback': a:callback }
 endfu
