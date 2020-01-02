@@ -3,7 +3,7 @@ if !exists('g:critiq_pr_merge_warning')
   let g:critiq_pr_merge_warning = 1
 endif 
 
-if !exists('g:critiq_pr_delete_remote_branch_warning)
+if !exists('g:critiq_pr_delete_remote_branch_warning')
   let g:critiq_pr_delete_remote_branch_warning = 1
 endif 
 
@@ -31,8 +31,8 @@ fu! critiq#pr_tab_commands()
 endfu
 
 fu! critiq#pr_tab_mappings()
-	nnoremap <buffer> gp :CritiqBrowsePr<cr>
-	nnoremap <buffer> gi :CritiqBrowseIssue<cr>
+	nnoremap <buffer> <silent> <localleader>gp    :CritiqBrowsePr<cr>
+	nnoremap <buffer> <silent> <localleader>gi    :CritiqBrowseIssue<cr>
 	nnoremap <buffer>  <silent> <localleader>gm   :CritiqMerge<cr>
 	nnoremap <buffer> <silent> <localleader>c     :CritiqCheckout<cr>
 	nnoremap <buffer> <silent> <localleader>p     :CritiqPull<cr>
