@@ -38,7 +38,6 @@ fu! s:on_pr_comments(response)
 	call s:render_pr_comments()
 endfu
 fu! s:on_pr_comments_refresh(response)
-	let t:critiq_pr_diff = critiq#diff#parse(a:response.body)
     call s:on_pr_comments(a:response)
 endfu
 
@@ -75,7 +74,13 @@ fu! s:set_comment_line_sign(comment, comment_sign_name, is_local_comment)
 endfu
 
 fu! s:render_pr_comments()
-	if !exists('t:critiq_pr_comments_loaded') && exists('t:critiq_pull_request') && exists('t:critiq_pr_comments')
+  echo 't:critiq_pr_comments_loaded ' . exists('t:critiq_pr_comments_loaded') 
+  "echo 't:critiq_pull_request ' .  exists('t:critiq_pull_request')
+
+  "echo 't:critiq_pr_comments' . exists('t:critiq_pr_comments')
+
+	if (!exists('t:critiq_pr_comments_loaded') || (exists('t:critiq_pr_comments_loaded') && t:critiq_pr_comments_loaded == 0)) && exists('t:critiq_pull_request') && exists('t:critiq_pr_comments') 
+      echo 'enter render_pr_comments'
 		let t:critiq_pr_comments_loaded = 1
 		let t:critiq_pr_comments_map = {}
 		exe 'sign define critiqremotecomment text=' . g:critiq_comment_symbol . ' texthl=Search'
@@ -89,6 +94,7 @@ fu! s:render_pr_comments()
 		endfor
 
         let local_pending_review = critiq#review#local_pending_review_exists(pr) 
+
         if local_pending_review
           let local_pending_review = critiq#review#get_local_pending_review(pr) 
           for comment in local_pending_review.comments
@@ -145,5 +151,6 @@ fu! critiq#views#pr#render()
 endfu
 
 fu! critiq#views#pr#refresh(pr)
+   let t:critiq_pr_comments_loaded = 0
 	call critiq#pr#pr_comments(a:pr, function('s:on_pr_comments_refresh'))
 endfu

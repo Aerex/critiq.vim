@@ -5,9 +5,13 @@ endif
 
 let s:comment_line_numbers = []
 
+fu! s:compare_line_numbers(line_nbr1, line_nbr2)
+  return str2nr(a:line_nbr1) - str2nr(a:line_nbr2)
+endfu
+
 fu! critiq#views#comment_list#next()
   let line_nbr = line('.') 
-  let sorted_line_nbrs = sort(keys(t:critiq_comment_line_number_map))
+  let sorted_line_nbrs = sort(keys(t:critiq_comment_line_number_map), 's:compare_line_numbers')
   let last_comment_line_nbr = sorted_line_nbrs[len(sorted_line_nbrs) - 1]
   if line_nbr == last_comment_line_nbr 
     if exists('g:critiq_comment_navigate_no_wrap')
@@ -34,7 +38,7 @@ endfu
 
 fu! critiq#views#comment_list#prev()
   let line_nbr = line('.') 
-  let sorted_line_nbrs = sort(keys(t:critiq_comment_line_number_map))
+  let sorted_line_nbrs = sort(keys(t:critiq_comment_line_number_map), 's:compare_line_numbers')
   let first_comment_line_nbr = sorted_line_nbrs[0]
   if line_nbr == first_comment_line_nbr 
     if exists('g:critiq_comment_navigate_no_wrap')
@@ -93,6 +97,33 @@ fu! critiq#views#comment_list#render() abort
       let comment_line_number_index = comment_line_number_index + 1
     endif 
   endfor
+
+  let comment_line_number = 3
+  let comment_line_number_index = 0
+  let local_pending_review = critiq#review#local_pending_review_exists(t:critiq_pull_request) 
+  if local_pending_review
+    let local_pending_review = critiq#review#get_local_pending_review(t:critiq_pull_request) 
+    for comment in local_pending_review.comments
+      if comment.path == line_diff.file && comment.position == position
+        if len(comments) > 0
+          call extend(comments, ['', bar])
+        endif
+        let username = $GH_USER 
+        let local_label = 'LOCAL'
+        let padding = repeat(' ', maxchars - len(local_label) - len(username))
+        call add(comments, username . padding . local_label)
+        call add(comments, '')
+        call extend(comments, split(comment.body, "\n"))
+        call add(s:comment_line_numbers, comment_line_number)
+        let t:critiq_comment_line_number_map[comment_line_number] = { 
+              \'index': comment_line_number_index, 
+              \'body': split(comment.body, "\n")
+              \}
+        let comment_line_number = comment_line_number + 5
+        let comment_line_number_index = comment_line_number_index + 1
+      endif
+    endfor
+  endif
 
   vertical belowright new
   exe 'vertical resize' g:critiq_comment_list_width

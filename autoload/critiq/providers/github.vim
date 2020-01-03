@@ -174,7 +174,7 @@ fu! s:diff(issue, callback)
 	let opts = s:base_options('s:on_diff')
 	let opts.headers['Accept'] = 'application/vnd.github.v3.diff'
 	let opts.raw = 1
-	let url = s:issue_repo_url(a:issue) . '/pulls/' . a:issue['number']
+	let url = s:repo_url(a:issue) . '/pulls/' . a:issue['number']
 	let id = critiq#request#send(url, opts)
 	let s:requests[id] = { 'callback': a:callback }
 endfu

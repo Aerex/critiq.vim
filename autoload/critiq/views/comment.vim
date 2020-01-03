@@ -11,6 +11,8 @@ fu! s:submit_comment()
 	  call critiq#pr#submit_comment(pr, b:critiq_line_diff, body)
     endif
 	bd
+    " Refresh comments on submitting comment
+	call critiq#views#pr#refresh(pr)
 endfu
 
 fu! critiq#views#comment#render()
@@ -30,8 +32,8 @@ fu! critiq#views#comment#render()
 		call critiq#pr_tab_commands()
 
 		if !exists('g:critiq_no_mappings')
-			nnoremap <buffer> q :bd<cr>
-			nnoremap <buffer> <cr> :CritiqSubmitComment<cr>
+			nnoremap <buffer> <silent>    q   :bd<cr>
+			nnoremap <buffer> <silent>  <cr>  :CritiqSubmitComment<cr>
 			call critiq#pr_tab_mappings()
 		endif
 
