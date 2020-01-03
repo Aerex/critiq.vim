@@ -31,9 +31,9 @@ fu! critiq#pr_tab_commands()
 endfu
 
 fu! critiq#pr_tab_mappings()
-	nnoremap <buffer>  <silent> gp                :CritiqBrowsePr<cr>
-	nnoremap <buffer>  <silent> gi                :CritiqBrowseIssue<cr>
-	nnoremap <buffer>  <silent> <localleader>gm   :CritiqMerge<cr>
+	nnoremap <buffer> <silent> <localleader>gp    :CritiqBrowsePr<cr>
+	nnoremap <buffer> <silent> <localleader>gi    :CritiqBrowseIssue<cr>
+	nnoremap <buffer> <silent> <localleader>gm   :CritiqMerge<cr>
 	nnoremap <buffer> <silent> <localleader>c     :CritiqCheckout<cr>
 	nnoremap <buffer> <silent> <localleader>p     :CritiqPull<cr>
 	nnoremap <buffer> <silent> <localleader>d     :CritiqDeleteBranch<cr>
